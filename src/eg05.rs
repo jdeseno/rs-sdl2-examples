@@ -2,8 +2,9 @@ extern crate sdl2;
 
 use std::path::Path;
 
-use sdl2::event::{Event};
+use sdl2::event::{Event,WindowEventId};
 use sdl2::surface::{Surface};
+use sdl2::keyboard::Keycode;
 
 fn main() {
     let ctx = sdl2::init().unwrap();
@@ -42,11 +43,24 @@ fn main() {
 
     let mut events = ctx.event_pump().unwrap();
 
-    // loop until we receive a QuitEvent
+    // loop until we receive a QuitEvent or press escape.
     'event : loop {
-        for event in events.poll_iter() {
+        for event in events.wait_iter() {
             match event {
                 Event::Quit{..} => break 'event,
+                Event::Window {win_event_id, ..} => {
+                    match win_event_id {
+                        // refresh our window, for example if it is no longer
+                        // covered by other windows.
+                        WindowEventId::Exposed => renderer.present(),
+                        _ => (),
+                    }
+                }
+                Event::KeyDown {keycode: Some(keycode), ..} => {
+                    if keycode == Keycode::Escape {
+                        break 'event
+                    }
+                }
                 _               => continue
             }
         }
