@@ -1,3 +1,8 @@
+# Deprecated
+
+This repo is not actively maintained. The rust sdl2 project should have up to date example code.
+
+
 # Rust SDL2 Examples
 
 ## Setup
